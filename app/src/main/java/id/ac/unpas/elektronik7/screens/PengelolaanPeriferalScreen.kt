@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import id.ac.unpas.elektronik7.model.Komputer
@@ -27,21 +28,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun PengelolaanPeriferalScreen() {
-    val context = LocalContext.current
-
-    val db = Room.databaseBuilder(
-        context,
-        AppDatabase::class.java, "pengelolaan-periferal"
-    ).build()
-
-    val periferalDao = db.periferalDao()
-
-    val list : LiveData<List<Periferal>> = periferalDao.loadAll()
-    val items : List<Periferal> by list.observeAsState(initial = listOf())
+    val viewModel = hiltViewModel<PengelolaanPeriferalViewModel>()
+    val items : List<Periferal> by viewModel.list.observeAsState(initial = listOf())
 
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        FormPencatatanPeriferal(periferalDao)
+        FormPencatatanPeriferal()
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(items = items, itemContent = { item ->
                 Row(modifier = Modifier

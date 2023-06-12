@@ -23,7 +23,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.benasher44.uuid.uuid4
+//import id.ac.unpas.elektronik7.model.Perif
 import id.ac.unpas.elektronik7.model.Periferal
 import id.ac.unpas.elektronik7.persistences.PeriferalDao
 import id.ac.unpas.elektronik7.ui.theme.Purple700
@@ -32,7 +35,8 @@ import kotlinx.coroutines.launch
 
 //@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormPencatatanPeriferal(periferalDao: PeriferalDao) {
+fun FormPencatatanPeriferal() {
+    val viewModel = hiltViewModel<PengelolaanPeriferalViewModel>()
     val nama = remember { mutableStateOf(TextFieldValue("")) }
     val harga = remember { mutableStateOf(TextFieldValue("")) }
     val deskripsi = remember { mutableStateOf(TextFieldValue("")) }
@@ -119,18 +123,18 @@ fun FormPencatatanPeriferal(periferalDao: PeriferalDao) {
         ) {
             Button(modifier = Modifier.weight(5f), onClick = {
                 val id = uuid4().toString()
-                val item = Periferal(
+                scope.launch {
+                viewModel.insert(
                     id,
                     nama.value.text,
-                    harga.value.text,
+                    harga.value.hashCode(),
                     deskripsi.value.text,
                     jenis.value.text)
-                scope.launch {
-                periferalDao.insertAll(item) }
                 nama.value = TextFieldValue("")
                 harga.value = TextFieldValue("")
                 deskripsi.value = TextFieldValue("")
                 jenis.value = TextFieldValue("")
+                }
             }, colors = loginButtonColors) {
                 Text(
                     text = "Simpan",

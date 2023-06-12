@@ -10,8 +10,6 @@ import androidx.compose.material.ButtonDefaults
 //import androidx.compose.material.ExperimentalMaterial3Api
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,7 +22,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.benasher44.uuid.uuid4
+//import id.ac.unpas.elektronik7.model.Computer
 import id.ac.unpas.elektronik7.model.Komputer
 import id.ac.unpas.elektronik7.persistences.KomputerDao
 import id.ac.unpas.elektronik7.ui.theme.Purple700
@@ -34,7 +35,8 @@ import kotlinx.coroutines.launch
 
 //@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormPencatatanKomputer(komputerDao: KomputerDao){
+fun FormPencatatanKomputer(){
+    val viewModel = hiltViewModel<PengelolaanKomputerViewModel>()
     val merk = remember { mutableStateOf(TextFieldValue("")) }
     val jenis = remember { mutableStateOf(TextFieldValue("")) }
     val harga = remember { mutableStateOf(TextFieldValue("")) }
@@ -138,18 +140,19 @@ fun FormPencatatanKomputer(komputerDao: KomputerDao){
         ) {
             Button(modifier = Modifier.weight(5f), onClick = {
                 val id = uuid4().toString()
-                val item = Komputer(id,
-                    merk.value.text, jenis.value.text,
-                    harga.value.text, dapatDiupgrade.value.text,
-                    spesifikasi.value.text)
                 scope.launch {
-                    komputerDao.insertAll(item)
-                }
+                    viewModel.insert(id,
+                        merk.value.text,
+                        jenis .value.text,
+                        harga.value.hashCode(),
+                        dapatDiupgrade.value.equals(" "),
+                        spesifikasi.value.text)
                     merk.value = TextFieldValue("")
                     jenis.value = TextFieldValue("")
                     harga.value = TextFieldValue("")
                     dapatDiupgrade.value = TextFieldValue("")
                     spesifikasi.value = TextFieldValue("")
+                    }
                 }, colors = loginButtonColors) {
                 Text(
                     text = "Simpan",

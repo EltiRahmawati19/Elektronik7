@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import id.ac.unpas.elektronik7.model.Komputer
@@ -27,22 +28,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun PengelolaanKomputerScreen(){
-    val context = LocalContext.current
-
-    val db = Room.databaseBuilder(
-        context,
-        AppDatabase::class.java, "pengelolaan-komputer"
-    ).build()
-
-    val komputerDao = db.komputerDao()
-
-    val list : LiveData<List<Komputer>> = komputerDao.loadAll()
-    val items : List<Komputer> by list.observeAsState(initial = listOf())
+    val viewModel = hiltViewModel<PengelolaanKomputerViewModel>()
+    val items : List<Komputer> by viewModel.list.observeAsState(initial = listOf())
 
 
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        FormPencatatanKomputer(komputerDao)
+        FormPencatatanKomputer()
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(items = items, itemContent = { item ->
                 Row(modifier = Modifier
@@ -65,8 +57,10 @@ fun PengelolaanKomputerScreen(){
                     }
                     Column(modifier = Modifier.weight(3f)) {
                         Text(text = "Dapat Di-upgrade", fontSize = 14.sp)
-                        Text(text = item.dapatDiupgrade, fontSize = 16.sp, fontWeight =
-                        FontWeight.Bold)
+                        Text(if (item.dapatDiupgrade) "Ya" else "Tidak",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                     Column(modifier = Modifier.weight(3f)) {
                         Text(text = "Spesifikasi", fontSize = 14.sp)

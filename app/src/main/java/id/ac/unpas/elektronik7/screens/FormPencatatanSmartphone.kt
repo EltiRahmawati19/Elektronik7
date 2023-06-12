@@ -22,16 +22,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.benasher44.uuid.uuid4
+//import id.ac.unpas.elektronik7.model.Hp
+import java.time.LocalDate
 import id.ac.unpas.elektronik7.model.Smartphone
 import id.ac.unpas.elektronik7.persistences.SmartphoneDao
 import id.ac.unpas.elektronik7.ui.theme.Purple700
 import id.ac.unpas.elektronik7.ui.theme.Teal200
 import kotlinx.coroutines.launch
+import java.util.Date
 
 //@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormPencatatanSmartphone(smartphoneDao: SmartphoneDao) {
+fun FormPencatatanSmartphone() {
+    val viewModel = hiltViewModel<PengelolaanSmartphoneViewModel>()
     val model = remember { mutableStateOf(TextFieldValue("")) }
     val warna = remember { mutableStateOf(TextFieldValue("")) }
     val storage = remember { mutableStateOf(TextFieldValue("")) }
@@ -130,19 +136,19 @@ fun FormPencatatanSmartphone(smartphoneDao: SmartphoneDao) {
         ) {
             Button(modifier = Modifier.weight(5f), onClick = {
                val id = uuid4().toString()
-                val item = Smartphone(
+                scope.launch {
+                viewModel.insert(
                     id,
                     model.value.text, warna.value.text,
-                    storage.value.text, tanggalRilis.value.text,
-                    sistemOperasi.value.text
-                )
-                scope.launch{
-                smartphoneDao.insertAll(item)}
+                    storage.value.hashCode(),
+                    tanggalRilis.value.text,
+                    sistemOperasi.value.text)
                 model.value = TextFieldValue("")
                 warna.value = TextFieldValue("")
                 storage.value = TextFieldValue("")
                 tanggalRilis.value = TextFieldValue("")
                 sistemOperasi.value = TextFieldValue("")
+                }
             }, colors = loginButtonColors) {
                 Text(
                     text = "Simpan",
