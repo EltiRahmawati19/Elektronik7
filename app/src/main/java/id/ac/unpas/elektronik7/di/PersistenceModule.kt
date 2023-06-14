@@ -23,7 +23,7 @@ object PersistenceModule {
             .databaseBuilder(
                 application,
                 AppDatabase::class.java,
-                "pengelolaan-komputer, pengelolaan-periferal, pengelolaan-smartphone"
+                "pengelolaan-toko_elektronik"
 
             )
             .fallbackToDestructiveMigration()

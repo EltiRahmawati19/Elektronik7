@@ -10,7 +10,7 @@ data class Komputer(
     val merk: String,
     val jenis: String,
     val harga: Int,
-    val dapatDiupgrade: Boolean,
+    val dapatDiupgrade: Int,
     val spesifikasi: String
 )
 

@@ -1,26 +1,72 @@
 package id.ac.unpas.elektronik7.screens
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import id.ac.unpas.elektronik7.model.Smartphone
-import id.ac.unpas.elektronik7.persistences.SmartphoneDao
-import java.util.Date
+import id.ac.unpas.elektronik7.repositories.SmartphoneRepository
 import javax.inject.Inject
 
 
 @HiltViewModel
-class PengelolaanSmartphoneViewModel @Inject constructor(private val smartphoneDao: SmartphoneDao) : ViewModel() {
-    val list : LiveData<List<Smartphone>> = smartphoneDao.loadAll()
+class PengelolaanSmartphoneViewModel @Inject constructor(private val smartphoneRepository: SmartphoneRepository) : ViewModel() {
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
-    suspend fun insert(id: String,
+    private val _success: MutableLiveData<Boolean> = MutableLiveData(false)
+    val success: LiveData<Boolean> get() = _success
+
+    private val _toast: MutableLiveData<String> = MutableLiveData()
+    val toast: LiveData<String> get() = _toast
+
+    private val _list: MutableLiveData<List<Smartphone>> = MutableLiveData()
+    val list: LiveData<List<Smartphone>> get() = _list
+
+    suspend fun loadItems() {
+        _isLoading.postValue(true)
+        smartphoneRepository.loadItems(onSuccess = {
+            _isLoading.postValue(false)
+            _list.postValue(it)
+        }, onError = { list, message ->
+            _toast.postValue(message)
+            _isLoading.postValue(false)
+            _list.postValue(list)
+        })
+    }
+
+    suspend fun insert(model: String,
+                       warna: String,
+                       storage: Int,
+                       tanggalRilis: String,
+                       sistemOperasi: String) {
+        _isLoading.postValue(true)
+        smartphoneRepository.insert( model, warna, storage, tanggalRilis, sistemOperasi, onError = { item, message ->
+            _toast.postValue(message)
+            _isLoading.postValue(false)
+        }, onSuccess = {
+            _isLoading.postValue(false)
+            _success.postValue(true)
+        })
+    }
+
+    suspend fun loadItem(id: String, onSuccess: (Smartphone?) -> Unit) {
+        val item = smartphoneRepository.find(id)
+        onSuccess(item)
+    }
+    suspend fun update(id: String,
                        model: String,
                        warna: String,
                        storage: Int,
                        tanggalRilis: String,
                        sistemOperasi: String) {
-        val item = Smartphone(id, model, warna, storage, tanggalRilis, sistemOperasi)
-        smartphoneDao.insertAll(item)
+        _isLoading.postValue(true)
+        smartphoneRepository.update(id, model, warna, storage, tanggalRilis, sistemOperasi, onError = { item, message ->
+            _toast.postValue(message)
+            _isLoading.postValue(false)
+        }, onSuccess = {
+            _isLoading.postValue(false)
+            _success.postValue(true)
+        })
     }
-
 }
