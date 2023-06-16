@@ -7,6 +7,7 @@ import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
+import id.ac.unpas.elektronik7.model.SistemSmartphone
 import id.ac.unpas.elektronik7.model.Smartphone
 import id.ac.unpas.elektronik7.networks.SmartphoneApi
 import id.ac.unpas.elektronik7.persistences.SmartphoneDao
@@ -50,7 +51,7 @@ class SmartphoneRepository @Inject constructor(
         warna : String,
         storage : Int,
         tanggalRilis : String,
-        sistemOperasi : String,
+        sistemOperasi : SistemSmartphone,
         onSuccess: (Smartphone) -> Unit,
         onError: (Smartphone?, String) -> Unit
     ) {
@@ -80,7 +81,7 @@ class SmartphoneRepository @Inject constructor(
         warna : String,
         storage : Int,
         tanggalRilis : String,
-        sistemOperasi : String,
+        sistemOperasi : SistemSmartphone,
         onSuccess: (Smartphone) -> Unit,
         onError: (Smartphone?, String) -> Unit
     ) {

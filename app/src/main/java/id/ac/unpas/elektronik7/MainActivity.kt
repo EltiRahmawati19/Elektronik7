@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
+import id.ac.unpas.elektronik7.screens.MainScreen
 import id.ac.unpas.elektronik7.screens.PengelolaanKomputerScreen
 import id.ac.unpas.elektronik7.screens.PengelolaanSmartphoneScreen
 import id.ac.unpas.elektronik7.ui.theme.Elektronik7Theme
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    PengelolaanKomputerScreen()
+                    MainScreen()
                 }
             }
         }
@@ -36,6 +37,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     Elektronik7Theme {
-        PengelolaanKomputerScreen()
+        MainScreen()
     }
 }

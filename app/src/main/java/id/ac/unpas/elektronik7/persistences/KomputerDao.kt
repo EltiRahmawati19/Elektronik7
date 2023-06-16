@@ -6,14 +6,14 @@ import id.ac.unpas.elektronik7.model.Komputer
 
 @Dao
 interface KomputerDao {
-    @Query("SELECT * FROM Komputer")
+    @Query("SELECT * FROM Komputer ORDER BY id DESC")
     fun loadAll(): LiveData<List<Komputer>>
 
-    @Query("SELECT * FROM Komputer")
+    @Query("SELECT * FROM Komputer ORDER BY id DESC")
     suspend fun getList(): List<Komputer>
 
     @Query("SELECT * FROM Komputer WHERE id = :id")
-    fun find(id: String): Komputer?
+    suspend fun find(id: String): Komputer?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg items: Komputer)

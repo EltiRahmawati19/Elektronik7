@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Elektronik7</string>
+    <string name="home">Home</string>
+    <string name="pengelolaan_komputer">Pengelolaan Komputer</string>
+    <string name="pengelolaan_periferal">Pengelolaan Periferal</string>
+    <string name="pengelolaan_smartphone">Pengelolaan Smartphone</string>
+    <string name="setting">Setting</string>
 </resources>

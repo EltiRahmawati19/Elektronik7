@@ -11,10 +11,10 @@ data class Smartphone(
     val warna: String,
     val storage: Int,
     val tanggalRilis: String,
-    val sistemOperasi: String
+    val sistemOperasi: SistemSmartphone
 )
 
-//enum class Hp {
-//    Android,
-//    iOS
-//}
+enum class SistemSmartphone (val value: String) {
+    ANDROID ("Android"),
+    IOS ("IOS")
+}

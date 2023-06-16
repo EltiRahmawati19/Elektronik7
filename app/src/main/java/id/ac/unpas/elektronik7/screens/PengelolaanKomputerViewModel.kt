@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.skydoves.sandwich.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import id.ac.unpas.elektronik7.model.JenisKomputer
 import id.ac.unpas.elektronik7.model.Komputer
 import id.ac.unpas.elektronik7.repositories.KomputerRepository
 import javax.inject.Inject
@@ -38,7 +39,7 @@ class PengelolaanKomputerViewModel @Inject constructor(private val komputerRepos
 
     suspend fun insert(
         merk: String,
-        jenis: String,
+        jenis: JenisKomputer,
         harga: Int,
         dapatDiupgrade: Int,
         spesifikasi: String) {
@@ -59,7 +60,7 @@ class PengelolaanKomputerViewModel @Inject constructor(private val komputerRepos
 
     suspend fun update(id: String,
                        merk: String,
-                       jenis: String,
+                       jenis: JenisKomputer,
                        harga: Int,
                        dapatDiupgrade: Int,
                        spesifikasi: String) {

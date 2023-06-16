@@ -8,14 +8,14 @@ import org.w3c.dom.Text
 data class Komputer(
     @PrimaryKey val id:String,
     val merk: String,
-    val jenis: String,
+    val jenis: JenisKomputer,
     val harga: Int,
     val dapatDiupgrade: Int,
     val spesifikasi: String
 )
 
-//enum class Computer  {
-//    Laptop,
-//    Desktop,
-//    AIO
-//}
+enum class JenisKomputer(val value: String)  {
+    LAPTOP("Laptop"),
+    DESKTOP("Desktop"),
+    AIO("AIO")
+}

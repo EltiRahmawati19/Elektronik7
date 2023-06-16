@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import id.ac.unpas.elektronik7.model.SistemSmartphone
 import id.ac.unpas.elektronik7.model.Smartphone
 import id.ac.unpas.elektronik7.repositories.SmartphoneRepository
 import javax.inject.Inject
@@ -39,7 +40,7 @@ class PengelolaanSmartphoneViewModel @Inject constructor(private val smartphoneR
                        warna: String,
                        storage: Int,
                        tanggalRilis: String,
-                       sistemOperasi: String) {
+                       sistemOperasi: SistemSmartphone) {
         _isLoading.postValue(true)
         smartphoneRepository.insert( model, warna, storage, tanggalRilis, sistemOperasi, onError = { item, message ->
             _toast.postValue(message)
@@ -59,7 +60,7 @@ class PengelolaanSmartphoneViewModel @Inject constructor(private val smartphoneR
                        warna: String,
                        storage: Int,
                        tanggalRilis: String,
-                       sistemOperasi: String) {
+                       sistemOperasi: SistemSmartphone) {
         _isLoading.postValue(true)
         smartphoneRepository.update(id, model, warna, storage, tanggalRilis, sistemOperasi, onError = { item, message ->
             _toast.postValue(message)

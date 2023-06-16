@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import id.ac.unpas.elektronik7.model.JenisPeriferal
 import id.ac.unpas.elektronik7.model.Periferal
 import id.ac.unpas.elektronik7.repositories.PeriferalRepository
 import javax.inject.Inject
@@ -38,7 +39,7 @@ class PengelolaanPeriferalViewModel @Inject constructor(private val periferalRep
     suspend fun insert(nama: String,
                        harga: Int,
                        deskripsi: String,
-                       jenis: String,) {
+                       jenis: JenisPeriferal,) {
         _isLoading.postValue(true)
         periferalRepository.insert(nama, harga, deskripsi, jenis, onError = { item, message ->
             _toast.postValue(message)
@@ -58,7 +59,7 @@ class PengelolaanPeriferalViewModel @Inject constructor(private val periferalRep
                        nama: String,
                        harga: Int,
                        deskripsi: String,
-                       jenis: String,) {
+                       jenis: JenisPeriferal,) {
         _isLoading.postValue(true)
         periferalRepository.update(id, nama, harga, deskripsi, jenis, onError = { item, message ->
             _toast.postValue(message)

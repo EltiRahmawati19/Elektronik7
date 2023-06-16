@@ -6,6 +6,7 @@ import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
+import id.ac.unpas.elektronik7.model.JenisKomputer
 import id.ac.unpas.elektronik7.model.Komputer
 import id.ac.unpas.elektronik7.networks.KomputerApi
 import id.ac.unpas.elektronik7.persistences.KomputerDao
@@ -46,7 +47,7 @@ class KomputerRepository @Inject constructor(
 
     suspend fun insert(
         merk : String,
-        jenis : String,
+        jenis : JenisKomputer,
         harga : Int,
         dapatDiupgrade : Int,
         spesifikasi : String,
@@ -76,7 +77,7 @@ class KomputerRepository @Inject constructor(
     suspend fun update(
         id : String,
         merk : String,
-        jenis : String,
+        jenis : JenisKomputer,
         harga : Int,
         dapatDiupgrade : Int,
         spesifikasi : String,

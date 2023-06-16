@@ -6,6 +6,7 @@ import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
+import id.ac.unpas.elektronik7.model.JenisPeriferal
 import id.ac.unpas.elektronik7.model.Periferal
 import id.ac.unpas.elektronik7.networks.PeriferalApi
 import id.ac.unpas.elektronik7.persistences.PeriferalDao
@@ -48,7 +49,7 @@ class PeriferalRepository @Inject constructor(
         nama : String,
         harga : Int,
         deskripsi : String,
-        jenis : String,
+        jenis : JenisPeriferal,
         onSuccess: (Periferal) -> Unit,
         onError: (Periferal?, String) -> Unit
     ) {
@@ -77,7 +78,7 @@ class PeriferalRepository @Inject constructor(
         nama : String,
         harga : Int,
         deskripsi : String,
-        jenis : String,
+        jenis : JenisPeriferal,
         onSuccess: (Periferal) -> Unit,
         onError: (Periferal?, String) -> Unit
     ) {

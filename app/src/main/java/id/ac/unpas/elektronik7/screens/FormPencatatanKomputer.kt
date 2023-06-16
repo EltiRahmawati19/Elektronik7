@@ -4,8 +4,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -41,6 +44,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.benasher44.uuid.uuid4
+import id.ac.unpas.elektronik7.model.JenisKomputer
 //import id.ac.unpas.elektronik7.model.Computer
 import id.ac.unpas.elektronik7.ui.theme.Purple700
 import id.ac.unpas.elektronik7.ui.theme.Teal200
@@ -53,11 +57,9 @@ fun FormPencatatanKomputer(navController: NavHostController, id: String? = null,
     val viewModel = hiltViewModel<PengelolaanKomputerViewModel>()
 
     val dapatDiupgradeOptions = listOf(0, 1);
-    val jenisOptions = listOf("--Jenis--", "Laptop", "Desktop", "AIO")
-    var expandDropdown by remember { mutableStateOf(false) }
 
     val merk = remember { mutableStateOf(TextFieldValue("")) }
-    val (jenis, setJenis) = remember { mutableStateOf(jenisOptions[0]) }
+    val jenis = remember { mutableStateOf(JenisKomputer.LAPTOP) }
     val harga = remember { mutableStateOf(TextFieldValue("")) }
     val (dapatDiupgrade, setDapatDiupgrade) = remember { mutableStateOf(dapatDiupgradeOptions[0]) }
     val spesifikasi = remember { mutableStateOf(TextFieldValue("")) }
@@ -68,11 +70,6 @@ fun FormPencatatanKomputer(navController: NavHostController, id: String? = null,
     val buttonLabel = if (isLoading.value) "Mohon tunggu..." else "Simpan"
 
     val scope = rememberCoroutineScope()
-
-    val icon = if (expandDropdown)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
 
     Column(
         modifier = Modifier
@@ -95,39 +92,26 @@ fun FormPencatatanKomputer(navController: NavHostController, id: String? = null,
             placeholder = { Text(text = "Merk") }
         )
 
-        Box(
-            modifier = Modifier.padding(top = 8.dp)
-        ) {
-            OutlinedTextField(
-                value = jenis,
-                enabled = false,
-                onValueChange = {},
-                modifier = Modifier
-                    .padding(4.dp)
-                    .fillMaxWidth()
-                    .clickable { expandDropdown = !expandDropdown },
-                trailingIcon = {
-                    Icon(icon, "dropdown icon")
-                },
-                textStyle = TextStyle(color = Color.Black)
-            )
-
-            DropdownMenu(
-                expanded = expandDropdown,
-                onDismissRequest = { expandDropdown = false },
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                jenisOptions.forEach { label ->
-                    DropdownMenuItem(
-                        onClick = {
-                            setJenis(label)
-                            expandDropdown = false
-                        },
-                        enabled = label != jenisOptions[0]) {
-                            Text(text = label)
-                    }
-                }
+        Column(Modifier.padding(4.dp)){
+            Text(text = "Jenis", fontSize = 10.sp)
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = jenis.value == JenisKomputer.LAPTOP,
+                    onClick = { jenis.value = JenisKomputer.LAPTOP }
+                )
+                Text(text = "Laptop", fontSize = 12.sp)
+                Spacer(modifier = Modifier.width(8.dp))
+                RadioButton(
+                    selected = jenis.value == JenisKomputer.DESKTOP,
+                    onClick = { jenis.value = JenisKomputer.DESKTOP }
+                )
+                Text(text = "Desktop", fontSize = 12.sp)
+                Spacer(modifier = Modifier.width(8.dp))
+                RadioButton(
+                    selected = jenis.value == JenisKomputer.AIO,
+                    onClick = { jenis.value = JenisKomputer.AIO }
+                )
+                Text(text = "AIO", fontSize = 12.sp)
             }
         }
 
@@ -180,6 +164,7 @@ fun FormPencatatanKomputer(navController: NavHostController, id: String? = null,
             ),
             placeholder = { Text(text = "5") }
         )
+
         OutlinedTextField(
             label = { Text(text = "Spesifikasi") },
             value = spesifikasi.value,
@@ -210,13 +195,13 @@ fun FormPencatatanKomputer(navController: NavHostController, id: String? = null,
                 .fillMaxWidth()
         ) {
             Button(modifier = Modifier.weight(5f), onClick = {
-                if (merk.value.text.isNotBlank() && merk.value.text.isNotBlank() && jenis != jenisOptions[0] && spesifikasi.value.text.isNotBlank()) {
+//                if(merk.value.text.isNotBlank() && merk.value.text.isNotBlank() && dapatDiupgrade != dapatDiupgradeOptions[0] && spesifikasi.value.text.isNotBlank()) {
                     if (id == null) {
                         scope.launch {
                             viewModel.insert(
                                 merk.value.text,
-                                jenis,
-                                Integer.parseInt(harga.value.text),
+                                jenis.value,
+                                harga.value.hashCode(),
                                 dapatDiupgrade,
                                 spesifikasi.value.text
                             )
@@ -226,15 +211,16 @@ fun FormPencatatanKomputer(navController: NavHostController, id: String? = null,
                             viewModel.update(
                                 id,
                                 merk.value.text,
-                                jenis,
-                                Integer.parseInt(harga.value.text),
+    //                        jenis.value.text,
+                                jenis.value,
+                                harga.value.hashCode(),
                                 dapatDiupgrade,
                                 spesifikasi.value.text
                             )
                         }
-                    }
+//                    }
                     if (!isLoading.value) {
-                        navController.navigate("pengelolaan-komputer")
+                        navController.navigate("pengelolaan-toko_elektronik")
                     }
                 }
             }, colors = loginButtonColors) {
@@ -248,8 +234,9 @@ fun FormPencatatanKomputer(navController: NavHostController, id: String? = null,
             }
             Button(modifier = Modifier.weight(5f), onClick = {
                 merk.value = TextFieldValue("")
-                setJenis(jenisOptions[0])
+                jenis.value = JenisKomputer.LAPTOP
                 harga.value = TextFieldValue("")
+                setDapatDiupgrade(dapatDiupgradeOptions[0])
                 spesifikasi.value = TextFieldValue("")
             }, colors = resetButtonColors) {
                 Text(
@@ -272,7 +259,7 @@ fun FormPencatatanKomputer(navController: NavHostController, id: String? = null,
             viewModel.loadItem(id) { Komputer ->
                 Komputer?.let {
                     merk.value = TextFieldValue(Komputer.merk)
-                    setJenis(Komputer.jenis)
+                    jenis.value = JenisKomputer.LAPTOP
                     harga.value = TextFieldValue(Komputer.harga.toString())
                     setDapatDiupgrade(Komputer.dapatDiupgrade)
                     spesifikasi.value = TextFieldValue(Komputer.spesifikasi)

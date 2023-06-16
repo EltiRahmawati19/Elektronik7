@@ -6,14 +6,14 @@ import id.ac.unpas.elektronik7.model.Periferal
 
 @Dao
 interface PeriferalDao {
-    @Query("SELECT * FROM Periferal")
+    @Query("SELECT * FROM Periferal ORDER BY id DESC")
     fun loadAll (): LiveData<List<Periferal>>
 
-    @Query("SELECT * FROM Periferal")
+    @Query("SELECT * FROM Periferal ORDER BY id DESC")
     suspend fun getList(): List<Periferal>
 
     @Query("SELECT * FROM Periferal WHERE id = :id")
-    fun find(id: String) : Periferal?
+    suspend fun find(id: String) : Periferal?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg items: Periferal)

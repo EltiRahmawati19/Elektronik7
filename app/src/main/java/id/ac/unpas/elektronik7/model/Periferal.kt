@@ -10,10 +10,10 @@ data class Periferal(
     val nama: String,
     val harga: Int,
     val deskripsi: String,
-    val jenis: String
+    val jenis: JenisPeriferal
 )
 
-//enum class Perif {
-//    Mouse,
-//    Keyboard
-//}
+enum class JenisPeriferal(val value: String) {
+    MOUSE ("Mouse"),
+    KEYBOARD ("Keyboard")
+}

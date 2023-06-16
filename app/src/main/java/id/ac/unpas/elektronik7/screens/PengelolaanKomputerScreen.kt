@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.room.Room
 import id.ac.unpas.elektronik7.model.Komputer
 import id.ac.unpas.elektronik7.persistences.AppDatabase
@@ -32,7 +35,8 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun PengelolaanKomputerScreen(){
+fun PengelolaanKomputerScreen(navController: NavHostController, modifier: Modifier){
+    
     val viewModel = hiltViewModel<PengelolaanKomputerViewModel>()
     val items : List<Komputer> by viewModel.list.observeAsState(initial = listOf())
 
@@ -40,12 +44,17 @@ fun PengelolaanKomputerScreen(){
     val context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        FormPencatatanKomputer()
+       Button(onClick = {
+           navController.navigate("tambah-pencatatan-komputer")
+       }) {
+           Text(text = "Tambah")
+       }
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(items = items, itemContent = { item ->
                 Row(modifier = Modifier
                     .padding(15.dp)
                     .fillMaxWidth()) {
+                    navController.navigate("edit-pengelolaan-komputer/${item.id}")
                     Column(modifier = Modifier.weight(3f)) {
                         Text(text = "Merk", fontSize = 14.sp)
                         Text(text = item.merk, fontSize = 16.sp, fontWeight =
@@ -53,7 +62,7 @@ fun PengelolaanKomputerScreen(){
                     }
                     Column(modifier = Modifier.weight(3f)) {
                         Text(text = "Jenis", fontSize = 14.sp)
-                        Text(text = item.jenis, fontSize = 16.sp, fontWeight =
+                        Text(text = item.jenis.value, fontSize = 16.sp, fontWeight =
                         FontWeight.Bold)
                     }
                     Column(modifier = Modifier.weight(3f)) {
@@ -63,7 +72,11 @@ fun PengelolaanKomputerScreen(){
                     }
                     Column(modifier = Modifier.weight(3f)) {
                         Text(text = "Dapat Di-upgrade", fontSize = 14.sp)
-                        Text(if (item.dapatDiupgrade) "Ya" else "Tidak",
+                        val dapatDiupgradeText = when (item.dapatDiupgrade) {
+                            0 -> "Tidak"
+                            else -> "Ya"
+                        }
+                        Text(text = dapatDiupgradeText,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
